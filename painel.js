@@ -196,6 +196,11 @@ function drawChart(items) {
   const canvas = $('volume-chart');
   if (!canvas) return;
   const tip = $('chart-tip');
+  const styles = getComputedStyle(canvas);
+  const axisColor = styles.getPropertyValue('--muted').trim();
+  const gridColor = styles.getPropertyValue('--line').trim();
+  const barColor = styles.getPropertyValue('--accent').trim();
+  const hoverColor = styles.getPropertyValue('--accent-ink').trim();
   let geometry;
   function paint(index = -1) {
     const width = canvas.clientWidth;
@@ -222,10 +227,10 @@ function drawChart(items) {
     ctx.textBaseline = 'middle';
     for (let grid = 0; grid <= 4; grid++) {
       const y = bottom - grid * (bottom - top) / 4;
-      ctx.fillStyle = '#5b7062';
+      ctx.fillStyle = axisColor;
       ctx.textAlign = 'right';
       ctx.fillText(n(grid * tick),left - 7,y);
-      ctx.strokeStyle = '#e1ebe4';
+      ctx.strokeStyle = gridColor;
       ctx.beginPath();
       ctx.moveTo(left,y);
       ctx.lineTo(width - 5,y);
@@ -236,11 +241,11 @@ function drawChart(items) {
       const x = left + step * (i + .5);
       const size = Math.max(1,Math.min(step * .64,57));
       const bar = (bottom - top) * value / max;
-      ctx.fillStyle = i === index ? '#154131' : i === items.length - 1 ? '#8fb99f' : '#40835d';
+      ctx.fillStyle = i === index ? hoverColor : i === items.length - 1 ? axisColor : barColor;
       if (bar > 0) ctx.fillRect(x - size / 2,bottom - bar,size,bar);
       if (i % skip === 0) {
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#516658';
+        ctx.fillStyle = axisColor;
         ctx.fillText(label,x,height - 10,Math.max(35,step * skip - 4));
       }
     });
@@ -263,7 +268,7 @@ function drawChart(items) {
   paint();
 }
 
-const colors = ['#f3f6f3','#dcece0','#b8dac2','#86bd98','#4b916b','#256247'];
+const colors = Array.from({length:6}, (_, level) => 'var(--heat-' + level + ')');
 function matrix(rowLabels,colLabels,counts) {
   if (!rowLabels.length || !colLabels.length) return empty();
   let peak = 0;
@@ -273,7 +278,7 @@ function matrix(rowLabels,colLabels,counts) {
     const shade = value ? Math.ceil(value / peak * 5) : 0;
     const description = rowLabels[i] + ' · ' + colLabels[j] + ' · ' + n(value) + ' checklists';
     return '<td><span title="' + esc(description) + '" style="background:' + colors[shade] +
-      ';color:' + (shade >= 4 ? '#fff' : '#233d2e') + '">' + (value || '·') + '</span></td>';
+      ';color:' + (shade >= 4 ? 'var(--paper)' : 'var(--ink)') + '">' + (value || '·') + '</span></td>';
   }).join('') + '</tr>').join('');
   return '<div class="table-scroll tall" tabindex="0" role="region" aria-label="Mapa de calor com contagem de checklists"><table class="matrix"><thead><tr><th scope="col">Recorte</th>' +
     header + '</tr></thead><tbody>' + body + '</tbody></table></div><div class="matrix-key"><span>0</span>' +
