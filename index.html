@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Indicadores das inspeções de ruas da Loja 30, Guajajaras.">
+  <title>Inspeções de ruas | Loja 30</title>
+  <link rel="stylesheet" href="painel.css">
+  <script src="dados.js" defer></script>
+  <script src="painel.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Pular para o painel</a>
+  <aside class="rail">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M11 7H7v18h18v-4M11 9h14v5H11zm0 9h14v5H11z" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><strong>Centro Elétrico</strong><small>GESTÃO LOGÍSTICA</small></div>
+    </div>
+    <div class="site-choice"><span class="unit-icon" aria-hidden="true">30</span><div><strong>Loja 30</strong><small>Guajajaras</small></div></div>
+    <nav id="nav" aria-label="Seções do painel">
+      <a href="#visao" data-page="visao"><span data-icon="grid"></span>Visão geral</a>
+      <a href="#volume" data-page="volume"><span data-icon="bars"></span>Volume e frequência</a>
+      <a href="#duracao" data-page="duracao"><span data-icon="clock"></span>Tempo e duração</a>
+      <a href="#equipe" data-page="equipe"><span data-icon="people"></span>Atendentes</a>
+      <a href="#cobertura" data-page="cobertura"><span data-icon="pin"></span>Ruas e depósitos</a>
+      <a href="#carga" data-page="carga"><span data-icon="stack"></span>Balanceamento</a>
+      <a href="#qualidade" data-page="qualidade"><span data-icon="shield"></span>Qualidade dos dados</a>
+    </nav>
+    <div class="rail-foot"><span class="status-dot"></span><span>Base de inspeções<small id="snapshot">Checklist das ruas</small></span></div>
+  </aside>
+  <main id="main">
+    <header class="topbar">
+      <div class="crumb">Operação logística <span aria-hidden="true">/</span> <strong id="breadcrumb">Visão geral</strong></div>
+      <button class="quiet-button" type="button" id="rules"><span data-icon="settings"></span>Parâmetros</button>
+    </header>
+    <div class="frame">
+      <header class="page-head">
+        <div><h1 id="page-title">Inspeções de ruas</h1><p id="page-subtitle">Acompanhamento da rotina de inspeções da Loja 30.</p></div>
+        <span class="period-tag"><span data-icon="calendar"></span><span id="period"></span></span>
+      </header>
+      <form class="filters" id="filters">
+        <div class="field"><label for="start">Data inicial</label><input type="date" id="start"></div>
+        <div class="field"><label for="end">Data final</label><input type="date" id="end"></div>
+        <div class="field"><label for="depot">Depósito</label><select id="depot"></select></div>
+        <div class="field"><label for="street">Rua</label><select id="street"></select></div>
+        <div class="field"><label for="employee">Atendente</label><select id="employee"></select></div>
+        <button class="quiet-button reset" type="button" id="reset"><span data-icon="reset"></span>Limpar</button>
+      </form>
+      <div id="filter-note" class="filter-note" role="status"></div>
+      <div id="view"></div>
+      <footer>Fonte <strong>Checklist_das_ruas.xlsx</strong><span>Datas e horários conforme a planilha.</span></footer>
+    </div>
+  </main>
+  <dialog id="settings">
+    <form id="settings-form">
+      <header class="dialog-head"><div><h2>Parâmetros de análise</h2><p>Ajuste os limites e a programação usados no painel.</p></div><button id="close-settings" class="quiet-button" type="button" aria-label="Fechar">✕</button></header>
+      <div class="dialog-scroll">
+        <div class="setting-grid">
+          <div class="field"><label for="sla">Limite de tempo (min)</label><input type="number" min="0.1" step="0.1" id="sla" required></div>
+          <div class="field"><label for="fast">Inspeção muito rápida (min)</label><input type="number" min="0.1" step="0.1" id="fast" required></div>
+          <div class="field"><label for="window-start">Início da janela</label><input type="time" id="window-start" required></div>
+          <div class="field"><label for="window-end">Fim da janela</label><input type="time" id="window-end" required></div>
+          <div class="field span"><label for="duplicate">Intervalo para possíveis duplicidades (min)</label><input type="number" min="0" step="0.1" id="duplicate" required></div>
+        </div>
+        <fieldset><legend>Dias programados</legend><div id="weekday-settings" class="checks"></div></fieldset>
+        <fieldset><legend>Ruas esperadas por depósito</legend><p>A lista inicial usa as ruas encontradas na planilha.</p><div id="street-settings" class="checks street-settings"></div>
+          <div class="field"><label for="extra-streets">Outras ruas esperadas</label><input type="text" id="extra-streets" placeholder="Geral 16, Cabos 03"><small>Use o nome do depósito, o número da rua e separe as entradas por vírgula.</small></div>
+        </fieldset>
+        <div class="field"><label for="exceptions">Datas sem operação</label><input type="text" id="exceptions" placeholder="dd/mm/aaaa, dd/mm/aaaa"><small>Separe as datas por vírgula.</small></div>
+        <div id="settings-error" class="error" role="alert"></div>
+      </div>
+      <div class="dialog-actions"><button class="quiet-button" type="button" id="default-rules">Restaurar padrões</button><button class="primary-button" type="submit">Aplicar parâmetros</button></div>
+    </form>
+  </dialog>
+</body>
+</html>
